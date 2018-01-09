@@ -1,0 +1,37 @@
+apply plugin: "java"
+apply plugin: "application"
+
+mainClassName = "me.mcofficer.sheeplebot.Main"
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+dependencies {
+    compile "net.dv8tion:JDA:3.3.1_306"
+    compile "com.github.BtoBastian.sdcf4j:sdcf4j-core:v1.0.8"
+    compile "com.github.BtoBastian.sdcf4j:sdcf4j-jda3:v1.0.8"
+    runtime "ch.qos.logback:logback-classic:1.1.8"
+    runtime "ch.qos.logback:logback-core:1.1.8"
+    compile "com.squareup.okhttp3:okhttp:3.9.0"
+    compile "org.twitter4j:twitter4j-core:4.0.6"
+    compile "org.apache.servicemix.bundles:org.apache.servicemix.bundles.commons-codec:1.3_5"
+}
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:deprecation"
+        }
+    }
+}
+
+run {
+    standardInput = System.in
+}
