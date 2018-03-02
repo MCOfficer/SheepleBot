@@ -5,6 +5,7 @@ import de.btobastian.sdcf4j.handler.JDA3Handler;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import javax.security.auth.login.LoginException;
@@ -19,7 +20,10 @@ public class Bot {
     public Bot(Properties properties) {
         try {
             this.properties = properties;
-            jda = new JDABuilder(AccountType.BOT).setToken(properties.getProperty("token")).buildBlocking();
+            jda = new JDABuilder(AccountType.BOT)
+                    .setToken(properties.getProperty("token"))
+                    .setGame(Game.listening("^join"))
+                    .buildBlocking();
             CommandHandler cmdHandler = new JDA3Handler(jda);
             cmdHandler.registerCommand(new JoinCommands(this));
             System.out.println("Bot Instantiation successful");
