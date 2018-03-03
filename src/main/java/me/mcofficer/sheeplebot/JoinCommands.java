@@ -28,11 +28,11 @@ public class JoinCommands implements CommandExecutor {
     }
 
     @Command(aliases = {"^join"}, description = "test", usage = "", privateMessages = false)
-    public void onJoinCommand(Guild guild, MessageChannel channel, User author, String[] args, Message msg) {
+    public void onJoinCommand(Guild guild, MessageChannel channel, User author, Message msg) {
         if (channel.getIdLong() != (Long.parseLong(properties.getProperty("channelId"))))
             return;
-
-        if (args.length < 1 && properties.getProperty("enableOAuthJoin").equals("1")) {
+        String args = msg.getContentStripped().replace("^join", "").trim();
+        if (args.length() < 1 && properties.getProperty("enableOAuthJoin").equals("1")) {
             String hash = org.apache.commons.codec.digest.DigestUtils.shaHex(author.getId());
             String authUrl = "https://discordapp.com/oauth2/authorize?client_id=" + clientId + "&redirect_uri=" +
                     redirectUri + "&response_type=code&scope=identify%20connections&state=" + hash;
@@ -43,19 +43,16 @@ public class JoinCommands implements CommandExecutor {
                             "\nYour connected Accounts don't need to be publicly visible.")
                     .build()).queue();
         }
-        else if (args.length > 0) {
+        else if (args.length() > 0) {
             Member member = guild.getMember(author);
-            ArrayList<Role> roles = new ArrayList<>();
-            for (String arg : args) {
-                Role role = guild.getRolesByName(arg, true).get(0);
-                String[] freeRoles = properties.getProperty("freeRoles").split(",");
-                for (String freeRole : freeRoles)
-                    if (Long.parseLong(freeRole) == role.getIdLong()) {
-                        roles.add(role);
-                        break;
+            Role role = guild.getRolesByName(args, true).get(0);
+            String[] freeRoles = properties.getProperty("freeRoles").split(",");
+            for (String freeRole : freeRoles) {
+                System.out.println(freeRole + " " + role.getIdLong());
+                if (Long.parseLong(freeRole) == role.getIdLong()) {
+                    guild.getController().addSingleRoleToMember(member, role).queue(success -> msg.addReaction("👌").queue());
                 }
             }
-            guild.getController().addRolesToMember(member, roles).queue(success -> msg.addReaction("👌").queue());
         }
     }
 }
