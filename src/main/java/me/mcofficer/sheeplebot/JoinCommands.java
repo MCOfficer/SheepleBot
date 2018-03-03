@@ -11,13 +11,11 @@ import java.util.Properties;
 
 public class JoinCommands implements CommandExecutor {
 
-    private Bot bot;
     private String redirectUri;
     private final String clientId;
     private Properties properties;
 
     public JoinCommands (Bot bot) {
-        this.bot = bot;
         this.properties = bot.getProperties();
         try {
            this.redirectUri = java.net.URLEncoder.encode(properties.getProperty("redirectUri"), "ISO-8859-1");

@@ -35,7 +35,7 @@ public class Bot {
             e.printStackTrace();
             jda.shutdown();
         }
-        catch (InterruptedException | RateLimitedException e) {
+        catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

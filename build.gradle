@@ -14,9 +14,9 @@ repositories {
 }
 
 dependencies {
-    compile "net.dv8tion:JDA:3.3.1_306"
-    compile "com.github.BtoBastian.sdcf4j:sdcf4j-core:v1.0.8"
-    compile "com.github.BtoBastian.sdcf4j:sdcf4j-jda3:v1.0.8"
+    compile "net.dv8tion:JDA:3.5.1_342"
+    compile "com.github.BtoBastian.sdcf4j:sdcf4j-core:v1.0.9"
+    compile "com.github.BtoBastian.sdcf4j:sdcf4j-jda3:v1.0.9"
     runtime "ch.qos.logback:logback-classic:1.1.8"
     runtime "ch.qos.logback:logback-core:1.1.8"
     compile "com.squareup.okhttp3:okhttp:3.9.0"
