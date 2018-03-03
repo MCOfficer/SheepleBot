@@ -47,12 +47,9 @@ public class JoinCommands implements CommandExecutor {
             Member member = guild.getMember(author);
             Role role = guild.getRolesByName(args, true).get(0);
             String[] freeRoles = properties.getProperty("freeRoles").split(",");
-            for (String freeRole : freeRoles) {
-                System.out.println(freeRole + " " + role.getIdLong());
-                if (Long.parseLong(freeRole) == role.getIdLong()) {
+            for (String freeRole : freeRoles)
+                if (Long.parseLong(freeRole) == role.getIdLong())
                     guild.getController().addSingleRoleToMember(member, role).queue(success -> msg.addReaction("👌").queue());
-                }
-            }
         }
     }
 }
