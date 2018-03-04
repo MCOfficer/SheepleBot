@@ -52,4 +52,15 @@ public class JoinCommands implements CommandExecutor {
                     guild.getController().addSingleRoleToMember(member, role).queue(success -> msg.addReaction("👌").queue());
         }
     }
+
+
+    @Command(aliases = {"^leave"}, description = "leave", privateMessages = false)
+    public void onLeaveCommand(Guild guild, MessageChannel channel, User author, Message msg) {
+        if (channel.getIdLong() != (Long.parseLong(properties.getProperty("channelId"))))
+            return;
+        String args = msg.getContentStripped().replace("^leave", "").trim();
+        Role role = guild.getRolesByName(args, true).get(0);
+        Member member = guild.getMember(author);
+        guild.getController().removeSingleRoleFromMember(member, role).queue(success -> msg.addReaction("👌").queue());
+    }
 }
