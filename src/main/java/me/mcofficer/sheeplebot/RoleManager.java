@@ -26,6 +26,8 @@ public class RoleManager {
     private final TextChannel channel;
     private final Role youtubeRole;
     private final Role twitterRole;
+    private final boolean enableYT;
+    private final boolean enableTwitter;
 
     public RoleManager(Bot bot) {
         Properties properties = bot.getProperties();
@@ -35,26 +37,49 @@ public class RoleManager {
         this.youtubeKey = properties.getProperty("youtubeKey");
         this.guild = bot.getJda().getGuildById(properties.getProperty("guildId"));
         this.channel = guild.getTextChannelById(properties.getProperty("channelId"));
-        this.youtubeRole = guild.getRolesByName(properties.getProperty("youtubeRole"), true).get(0);
-        this.twitterRole = guild.getRolesByName(properties.getProperty("twitterRole"), true).get(0);
+        this.enableYT = properties.getProperty("enableYT").equals("1");
+        this.enableTwitter = properties.getProperty("enableTwitter").equals("1");
+        this.youtubeRole = enableYT ? guild.getRolesByName(properties.getProperty("youtubeRole"), true).get(0) : null;
+        this.twitterRole = enableTwitter? guild.getRolesByName(properties.getProperty("twitterRole"), true).get(0) : null;
     }
 
 
-    public synchronized void assignRole(String code, String state) {
+    public synchronized void assignRoles(String code, String state) {
         String accessToken = exchangeCode(code);
         if (accessToken == null)
             // Silently fail - if the token is null, an error has already been thrown
             return;
 
+        String service;
+        if (state.endsWith("+twitter")) {
+            state = state.substring(0, state.length() - 8);
+            service = "twitter";
+        }
+        else if (state.endsWith("+yt")) {
+            state = state.substring(0, state.length() - 3);
+            service = "yt";
+        }
+        else if (state.endsWith("+all")) {
+            state = state.substring(0, state.length() - 4);
+            service = "all";
+        }
+        else {
+            System.out.println("No Service was provided with the request");
+            return;
+        }
+
         // Check if the User opening the URL is indeed the one that authorized the bot
         String authorizedUserId = getAuthorizedUserId(accessToken);
         if (authorizedUserId == null || !org.apache.commons.codec.digest.DigestUtils.shaHex(authorizedUserId).equals(state)) {
+            System.out.println("User ID doesn't match state, aborting");
             return;
         }
 
         HashMap<String, String> connections = getUserConnections(accessToken);
-        boolean youtube = connections.containsKey("youtube") && checkYoutube(connections.get("youtube"));
-        boolean twitter = connections.containsKey("twitter") && checkTwitter(connections.get("twitter"));
+        boolean youtube = connections.containsKey("youtube") && checkYoutube(connections.get("youtube")) && enableYT
+                && (service.equals("yt") || service.equals("all"));
+        boolean twitter = connections.containsKey("twitter") && checkTwitter(connections.get("twitter")) && enableTwitter
+                && (service.equals("twitter") || service.equals("all"));
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle("SheepleBot", "https://github.com/MCOfficer/SheepleBot");

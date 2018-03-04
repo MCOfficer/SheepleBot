@@ -29,12 +29,12 @@ public class ServerListener {
                 while ((s = in.readLine()) != null) {
                     if (s.startsWith("GET /?code=")) {
                         String[] sa = s.split(" ")[1].replace("/?code=", "").split("&state=");
-                        bot.getRoleManager().assignRole(sa[0], sa[1]);
+                        bot.getRoleManager().assignRoles(sa[0], sa[1]);
                         count++;
                     }
                     else if (s.startsWith("GET /?state=")) {
                         String[] sa = s.split(" ")[1].replace("/?state=", "").split("&code=");
-                        bot.getRoleManager().assignRole(sa[1], sa[0]);
+                        bot.getRoleManager().assignRoles(sa[1], sa[0]);
                         count++;
                     }
                     if (s.isEmpty())

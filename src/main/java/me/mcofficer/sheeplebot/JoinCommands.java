@@ -14,6 +14,8 @@ public class JoinCommands implements CommandExecutor {
     private String redirectUri;
     private final String clientId;
     private Properties properties;
+    private final boolean enableYT;
+    private final boolean enableTwitter;
 
     public JoinCommands (Bot bot) {
         this.properties = bot.getProperties();
@@ -25,24 +27,21 @@ public class JoinCommands implements CommandExecutor {
             System.exit(3);
         }
         this.clientId = properties.getProperty("clientId");
+        this.enableYT = properties.getProperty("enableYT").equals("1");
+        this.enableTwitter = properties.getProperty("enableTwitter").equals("1");
     }
 
-    @Command(aliases = {"^join"}, description = "test", usage = "", privateMessages = false)
+    @Command(aliases = {"^join"}, description = "join", privateMessages = false)
     public void onJoinCommand(Guild guild, MessageChannel channel, User author, Message msg) {
         if (channel.getIdLong() != (Long.parseLong(properties.getProperty("channelId"))))
             return;
         String args = msg.getContentStripped().replace("^join", "").trim();
-        if (args.length() < 1 && properties.getProperty("enableOAuthJoin").equals("1")) {
-            String hash = org.apache.commons.codec.digest.DigestUtils.shaHex(author.getId());
-            String authUrl = "https://discordapp.com/oauth2/authorize?client_id=" + clientId + "&redirect_uri=" +
-                    redirectUri + "&response_type=code&scope=identify%20connections&state=" + hash;
-            channel.sendMessage(new EmbedBuilder()
-                    .setTitle("SheepleBot", "https://github.com/MCOfficer/SheepleBot")
-                    .setDescription("Please visit [this link](" + authUrl + ") and grant the Bot access to your connected accounts." +
-                            "\nNote that this Link is personalized and therefor not interchangeable." +
-                            "\nYour connected Accounts don't need to be publicly visible.")
-                    .build()).queue();
-        }
+        if (enableTwitter && enableYT && args.length() < 1)
+            provideOAuthLink(channel, author, "all");
+        else if (enableYT && (args.equalsIgnoreCase("youtube") || args.equalsIgnoreCase("yt")))
+            provideOAuthLink(channel, author, "yt");
+        else if (enableTwitter && args.equalsIgnoreCase("twitter"))
+            provideOAuthLink(channel, author, "twitter");
         else if (args.length() > 0) {
             Member member = guild.getMember(author);
             Role role = guild.getRolesByName(args, true).get(0);
@@ -51,6 +50,19 @@ public class JoinCommands implements CommandExecutor {
                 if (Long.parseLong(freeRole) == role.getIdLong())
                     guild.getController().addSingleRoleToMember(member, role).queue(success -> msg.addReaction("👌").queue());
         }
+    }
+
+
+    private void provideOAuthLink(MessageChannel channel, User author, String service) {
+        String hash = org.apache.commons.codec.digest.DigestUtils.shaHex(author.getId());
+        String authUrl = "https://discordapp.com/oauth2/authorize?client_id=" + clientId + "&redirect_uri=" +
+                redirectUri + "&response_type=code&scope=identify%20connections&state=" + hash + "%20" + service;
+        channel.sendMessage(new EmbedBuilder()
+                .setTitle("SheepleBot", "https://github.com/MCOfficer/SheepleBot")
+                .setDescription("Please visit [this link](" + authUrl + ") and grant the Bot access to your connected accounts." +
+                        "\nNote that this Link is personalized and therefor not interchangeable." +
+                        "\nYour connected Accounts don't need to be publicly visible.")
+                .build()).queue();
     }
 
 
