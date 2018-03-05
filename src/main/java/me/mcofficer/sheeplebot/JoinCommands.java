@@ -54,7 +54,7 @@ public class JoinCommands implements CommandExecutor {
 
 
     private void provideOAuthLink(MessageChannel channel, User author, String service) {
-        String hash = org.apache.commons.codec.digest.DigestUtils.shaHex(author.getId());
+        String hash = org.apache.commons.codec.digest.DigestUtils.sha1Hex(author.getId());
         String authUrl = "https://discordapp.com/oauth2/authorize?client_id=" + clientId + "&redirect_uri=" +
                 redirectUri + "&response_type=code&scope=identify%20connections&state=" + hash + "%20" + service;
         channel.sendMessage(new EmbedBuilder()

@@ -70,7 +70,7 @@ public class RoleManager {
 
         // Check if the User opening the URL is indeed the one that authorized the bot
         String authorizedUserId = getAuthorizedUserId(accessToken);
-        if (authorizedUserId == null || !org.apache.commons.codec.digest.DigestUtils.shaHex(authorizedUserId).equals(state)) {
+        if (authorizedUserId == null || !org.apache.commons.codec.digest.DigestUtils.sha1Hex(authorizedUserId).equals(state)) {
             System.out.println("User ID doesn't match state, aborting");
             return;
         }
