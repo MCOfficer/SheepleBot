@@ -16,6 +16,7 @@ public class Bot {
     private ServerListener serverListener;
     private RoleManager roleManager;
     private Properties properties;
+    private StatusClient statusClient;
 
     public Bot(Properties properties) {
         try {
@@ -29,6 +30,8 @@ public class Bot {
             System.out.println("Bot Instantiation successful");
             serverListener = new ServerListener(this);
             roleManager = new RoleManager(this);
+            statusClient = new StatusClient(properties);
+            new Thread(() -> statusClient.run()).start();
             serverListener.main();
         }
         catch (LoginException e) {
