@@ -50,7 +50,7 @@ public class Commands implements CommandExecutor {
             String[] freeRoles = properties.getProperty("freeRoles").split(",");
             for (String freeRole : freeRoles)
                 if (Long.parseLong(freeRole) == role.getIdLong())
-                    guild.getController().addSingleRoleToMember(member, role).queue(success -> msg.addReaction("👌").queue());
+                    guild.getController().addSingleRoleToMember(member, role).queue(success -> msg.addReaction("\\uD83D\\uDC4C").queue());
         }
     }
 
@@ -62,7 +62,7 @@ public class Commands implements CommandExecutor {
         String args = msg.getContentStripped().replace("^leave", "").trim();
         Role role = guild.getRolesByName(args, true).get(0);
         Member member = guild.getMember(author);
-        guild.getController().removeSingleRoleFromMember(member, role).queue(success -> msg.addReaction("👌").queue());
+        guild.getController().removeSingleRoleFromMember(member, role).queue(success -> msg.addReaction("\\uD83D\\uDC4C").queue());
     }
 
 
@@ -79,7 +79,7 @@ public class Commands implements CommandExecutor {
     }
 
 
-    @Command(aliases = {"^status"}, description = "", usage = "", privateMessages = false)
+    @Command(aliases = {"^status"}, description = "status", privateMessages = false)
     public void onStatusCommand(MessageChannel channel) {
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle("SheepIt Status", "https://www.sheepit-renderfarm.com/stats.php")
