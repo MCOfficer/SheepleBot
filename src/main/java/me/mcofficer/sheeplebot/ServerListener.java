@@ -11,7 +11,7 @@ public class ServerListener {
 
     private final Bot bot;
 
-    public ServerListener (Bot bot) {
+    ServerListener(Bot bot) {
         this.bot = bot;
     }
 

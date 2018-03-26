@@ -18,7 +18,7 @@ public class Bot {
     private Properties properties;
     private StatusClient statusClient;
 
-    public Bot(Properties properties) {
+    Bot(Properties properties) {
         try {
             this.properties = properties;
             jda = new JDABuilder(AccountType.BOT)

@@ -29,7 +29,7 @@ public class RoleManager {
     private final boolean enableYT;
     private final boolean enableTwitter;
 
-    public RoleManager(Bot bot) {
+    RoleManager(Bot bot) {
         Properties properties = bot.getProperties();
         this.clientId = properties.getProperty("clientId");
         this.clientSecret = properties.getProperty("clientSecret");
