@@ -26,12 +26,12 @@ public class Bot {
                     .setGame(Game.listening("^join"))
                     .buildBlocking();
             CommandHandler cmdHandler = new JDA3Handler(jda);
-            cmdHandler.registerCommand(new JoinCommands(this));
             System.out.println("Bot Instantiation successful");
             serverListener = new ServerListener(this);
             roleManager = new RoleManager(this);
             statusClient = new StatusClient(properties);
             new Thread(() -> statusClient.run()).start();
+            cmdHandler.registerCommand(new Commands(properties, statusClient));
             serverListener.main();
         }
         catch (LoginException e) {
