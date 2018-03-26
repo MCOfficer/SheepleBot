@@ -39,8 +39,8 @@ public class RoleManager {
         this.channel = guild.getTextChannelById(properties.getProperty("channelId"));
         this.enableYT = properties.getProperty("enableYT").equals("1");
         this.enableTwitter = properties.getProperty("enableTwitter").equals("1");
-        this.youtubeRole = enableYT ? guild.getRolesByName(properties.getProperty("youtubeRole"), true).get(0) : null;
-        this.twitterRole = enableTwitter? guild.getRolesByName(properties.getProperty("twitterRole"), true).get(0) : null;
+        this.youtubeRole = guild.getRoleById(properties.getProperty("youtubeRole"));
+        this.twitterRole = guild.getRoleById(properties.getProperty("twitterRole"));
     }
 
 
