@@ -23,6 +23,7 @@ class StatusClient {
     public String framesRendering;
     public String activeProjects;
     public Instant lastChecked;
+    public int sinceLastSuccess;
 
     StatusClient(Properties properties) {
         statusApi = properties.getProperty("statusApi");
@@ -42,10 +43,12 @@ class StatusClient {
                     framesRendering = stats.getAttribute("frames_rendering");
                     activeProjects = stats.getAttribute("active_projects");
                     lastChecked = Instant.now();
+                    sinceLastSuccess = 0;
                     checked = true;
                 }
                 catch (IOException | SAXException | NullPointerException e) {
                     e.printStackTrace();
+                    sinceLastSuccess++;
                 }
                 Thread.sleep(420000); // 7 [m] * 60 [s] * 1000 [milis] = 420 000
             }

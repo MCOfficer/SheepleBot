@@ -93,7 +93,9 @@ public class Commands implements CommandExecutor {
                     "**Frames Rendering:** %s\n" +
                     "**Active Projects:** %s\n",
                     statusClient.framesRemaining, statusClient.connectedClients,
-                    statusClient.framesRendering, statusClient.activeProjects);
+                    statusClient.framesRendering, statusClient.activeProjects +
+                    (statusClient.sinceLastSuccess == 0 ?
+                    "" : "\n(Failed Updates since last success: " + statusClient.sinceLastSuccess + ")"));
             eb.setDescription(desc)
                     .setTimestamp(statusClient.lastChecked);
         }
